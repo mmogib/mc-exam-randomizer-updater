@@ -98,7 +98,7 @@ router.get(p.get_verstion, async (req: Request, res: Response) => {
     pub_date: new Date(record.get("date") as string).toISOString(),
     version: record.get("version") as string,
     platforms: {
-      [target]: {
+      [record.get("platform") as string]: {
         signature: "",
         url: record.get("url") as string,
       },

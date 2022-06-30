@@ -43,6 +43,7 @@ const tempResponse: UpdaterResponse = {
 interface Update {
   [ver: string]: UpdaterResponse;
 }
+
 const updates: Update = {
   "0.1.2": {
     ...tempResponse,
@@ -54,6 +55,19 @@ const updates: Update = {
         signature: "",
         // eslint-disable-next-line max-len
         url: "https://github.com/mmogib/mc-exam-randomizer-app/releases/download/v0.1.2/mc-exam-randomizer-app_0.1.2_x64_en-US.msi",
+      },
+    },
+  },
+  "0.1.3": {
+    ...tempResponse,
+    version: "0.1.4",
+    // eslint-disable-next-line max-len
+    notes: "some feaures",
+    platforms: {
+      "windows-x86_64": {
+        signature: "",
+        // eslint-disable-next-line max-len
+        url: "https://github.com/mmogib/mc-exam-randomizer-app/releases/download/v0.1.4/MC.Exam.Randomizer_0.1.4_x64_en-US.msi",
       },
     },
   },

@@ -41,7 +41,7 @@ router.get(p.get_verstion, async (req: Request, res: Response) => {
     })
     .all();
   if (!records || records.length == 0) {
-    return res.status(NO_CONTENT).send();
+    return res.status(NO_CONTENT).json({});
   }
   const record = records[0];
   const new_version: UpdaterResponse = {

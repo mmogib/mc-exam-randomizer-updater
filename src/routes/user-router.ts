@@ -14,72 +14,23 @@ const { OK, NO_CONTENT } = StatusCodes;
 export const p = {
   get_verstion: "/:target/:version",
 } as const;
-
-interface Body {
-  target: string;
-  version: string;
+/*
+ * {
+  "url": "https://mycompany.example.com/myapp/releases/myrelease.tar.gz",
+  "version": "0.0.1",
+  "notes": "Theses are some release notes",
+  "pub_date": "2020-09-18T12:29:53+01:00",
+  "signature": ""
 }
-
-interface Platform {
-  [name: string]: {
-    signature: string;
-    url: string;
-  };
-}
+ */
 interface UpdaterResponse {
+  url: string;
   version: string;
   notes: string;
   pub_date: string;
-  platforms: Platform;
-}
-const tempPlatform: Platform = {
-  "windows-x86_64": {
-    signature: "",
-    // eslint-disable-next-line max-len
-    url: "",
-  },
-};
-const tempResponse: UpdaterResponse = {
-  version: "",
-  notes: "",
-  pub_date: new Date().toISOString(),
-  platforms: tempPlatform,
-};
-interface Update {
-  [ver: string]: UpdaterResponse;
+  signature: string;
 }
 
-const updates: Update = {
-  "0.1.2": {
-    ...tempResponse,
-    version: "0.1.3",
-    // eslint-disable-next-line max-len
-    notes: "first one",
-    platforms: {
-      "windows-x86_64": {
-        signature: "",
-        // eslint-disable-next-line max-len
-        url: "https://github.com/mmogib/mc-exam-randomizer-app/releases/download/v0.1.2/mc-exam-randomizer-app_0.1.2_x64_en-US.msi",
-      },
-    },
-  },
-  "0.1.3": {
-    ...tempResponse,
-    version: "0.1.4",
-    // eslint-disable-next-line max-len
-    notes: "some feaures",
-    platforms: {
-      "windows-x86_64": {
-        signature: "",
-        // eslint-disable-next-line max-len
-        url: "https://github.com/mmogib/mc-exam-randomizer-app/releases/download/v0.1.4/MC.Exam.Randomizer_0.1.4_x64_en-US.msi",
-      },
-    },
-  },
-};
-/**
- * Get all users.
- */
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.get(p.get_verstion, async (req: Request, res: Response) => {
   const { params } = req;
@@ -90,23 +41,25 @@ router.get(p.get_verstion, async (req: Request, res: Response) => {
     })
     .all();
   if (!records || records.length == 0) {
-    return res.status(NO_CONTENT).json();
+    return res.status(NO_CONTENT).send();
   }
   const record = records[0];
   const new_version: UpdaterResponse = {
+    url: record.get("url") as string,
+    version: record.get("version") as string,
     notes: record.get("notes") as string,
     pub_date: new Date(record.get("date") as string).toISOString(),
-    version: record.get("version") as string,
-    platforms: {
-      [record.get("platform") as string]: {
-        signature: "",
-        url: record.get("url") as string,
-      },
-    },
+    signature: record.get("signature") as string,
   };
   // const new_version: UpdaterResponse = updates[version];
   // if (!new_version) {
-  //
+  //{
+  //   "url": "https://mycompany.example.com/myapp/releases/myrelease.tar.gz",
+  //   "version": "0.0.1",
+  //   "notes": "Theses are some release notes",
+  //   "pub_date": "2020-09-18T12:29:53+01:00",
+  //   "signature": ""
+  // }
   // }
 
   return res.status(OK).json({ ...new_version });
